@@ -29,4 +29,10 @@ def PBase(num, b=2, l=1):
     
     return Pattern( number_list )
 
-#print(PBase(5, b=5, minlen=5))
+
+def main():
+    print("stretch__beatz PBase")
+    print(PBase(5, b=5, l=5))
+
+if __name__ == "__main__":
+    main()
