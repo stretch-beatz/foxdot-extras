@@ -1,32 +1,73 @@
 from FoxDot import *
 from functools import partial
 
-@nextBar
-@player_method
-def solobar(self, n=1):
-    
-    self.solo()
-    futureBar(partial(self.solo, False), n=n)
+def group_method(f):
+    """ Decorator for assigning functions as Group methods.
+    If the function name contains "_group" that will be removed while assigning
+    allowing you to a have a function, a player method and group method all called the same thing
 
-'''
-@player_method
-def test(self):
-    print(self.degree)
- 
-l1.test()
+    >>> @group_method
+    ... def test(self):
+    ...    print(self)
 
-from foxdot_extras.pbase import PBase
-from functools import partial
+    >>> p1.test()
+    """
+    name = f.__name__.replace("_group", "")
+    setattr(Group, name, f)
+    return getattr(Group, name)
 
-l1 >> dub(P[0,2,4,2,3,4,5])
-d1 >> play("x X ")
+GroupMethod = group_method # Temporary alias
 
 @player_method
-def solobar(self, sn=1):
+def soloBars(self,n=2,end=False):
+    ''' Solo's the current player from the next bar for the specified amount of bars
+    '''
     nextBar(self.solo)
-    futureBar(partial(self.solo, False, n=sn))
+    soloEnd = Clock.next_bar() + (n * Clock.bar_length())
+    Clock.schedule(self.metro.solo.reset, soloEnd)
+    if(end):
+        Clock.schedule(self.stop, soloEnd)
+        
+        
+@player_method
+def soloBeats(self, n=8, end=False):
+    ''' Solo's the current player from now for the specified amount of beats
+    '''
+    Clock.schedule(self.solo, Clock.now())
+    soloEnd = Clock.now() + n
+    Clock.schedule(self.metro.solo.reset, soloEnd)
+    if(end):
+        Clock.schedule(self.stop, soloEnd)
+    
 
+@group_method
+def soloBars_group(self,n=2, end=False):
+    ''' Solo's the current group from the next bar for the specified amount of bars
+    '''
+    if self.metro is None:
+        self.__class__.metro = Player.metro
 
-d1.solobar()
+    soloEnd = Clock.next_bar() + (n * Clock.bar_length())
+    Clock.schedule(self.metro.solo.reset, soloEnd)
+    if(end):
+        for player in list(self.metro.playing):
+            if player in self.players:
+                Clock.schedule(player.stop, soloEnd)
 
-'''
+    nextBar(self.solo)
+
+@group_method
+def soloBeats_group(self,n=8, end=False):
+    ''' Solo's the current group from now for the specified amount of beats
+    '''
+    if self.metro is None:
+        self.__class__.metro = Player.metro
+    
+    soloEnd = Clock.now() + n
+    Clock.schedule(self.metro.solo.reset, soloEnd)
+    if(end):
+        for player in list(self.metro.playing):
+            if player in self.players:
+                Clock.schedule(player.stop, soloEnd)
+    
+    Clock.schedule(self.solo, Clock.now())
