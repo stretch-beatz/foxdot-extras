@@ -10,7 +10,7 @@ with open('test-requirements.txt') as requirements_file:
 
 setup(
     name='foxdot_extras',
-    version='0.1.0',
+    version='0.1.1',
     description='Collection of add-ons used for stretch___beatz performances. Hopefully there will comiits to FoxDot repo later.',
     author='Martyn Eggleton @ stretch___beatz',
     author_email='martyn.eggleton@gmail.com',
