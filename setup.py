@@ -22,7 +22,7 @@ setup(
         # If any package contains *.txt files, include them:
         "": ["*.yml", "*.hbs"],
     },
-    python_requires='>=3.7',
+    python_requires='>=3.10',
     install_requires=requirements,
     tests_require=requirements + test_requirements,
     test_suite='nose2.collector.collector',
@@ -32,9 +32,6 @@ setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
